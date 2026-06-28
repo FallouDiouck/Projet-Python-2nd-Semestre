@@ -67,9 +67,9 @@ class DatabaseConnection:
 
     def fetchall(self):
         # recupere tout les resultats
-        return self.connection.fetchall()
+        return self.cursor.fetchall()
 
 
     def fetchone(self):
         # recupère un seul résultat
-        return self.connection.fetchone()
+        return self.cursor.fetchone()
