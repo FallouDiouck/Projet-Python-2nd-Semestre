@@ -1,15 +1,13 @@
 from dao.base_dao import BaseDAO
-from models import Utilisateur
+from models.utilisateur import Utilisateur
 from database.connexion import DatabaseConnection
-from models.Utilisateur import Utulisateur
 
 class UtilisateurDAO(BaseDAO):
-            ######################
+    def __init__(self, connexion):
+        super().__init__(connexion)
+            ###################### suppresion et recherche par id gerer par la classe abstraite BaseDao
     def ajouterUser(self, utilisateur):
-                db = DatabaseConnection()  # instance
-                if not db.connexion:
-                    print("Pas de connexion")
-                    return False
+               ## db = DatabaseConnection()  # pas besoin d'instancier gerer par BaseDao
 
                 sql = """
             INSERT INTO utilisateur (login, password, nom, prenom, email, role, service, date_creation)
@@ -24,32 +22,18 @@ class UtilisateurDAO(BaseDAO):
                     utilisateur.role,
                     utilisateur.service
                 )
-
                 try:
-                    ok = db.execute(sql, params)
-                    if ok:
-                        db.commit()
-                    return ok
+                   cursor = self.connexion.cursor()
+                   cursor.execute(sql, params)
+                   self.connexion.commit()
+                   return True
                 except Exception as e:
-                    db.rollback()
-                    print("Erreur lors de l'ajout:", e)
-                    return False
-                finally:
-                    db.disconnect()
+                  self.connexion.rollback()
+                  print("Erreur lors de l'ajout:", e)
+                return False
 
-    def RechercherparLogin(self, login):
-        try:
-            cursor = self.connexion.cursor()
-            cursor.execute("SELECT * FROM utilisateur WHERE login=%s", (login,))
-            row = cursor.fetchone()
-            if row:
-                return Utilisateur(*row[1:], id=row[0], date_creation=row[-1])
-            return None
-        except Exception as e:
-            print("Erreur RechercherparLogin:", e)
-            return None
 
-    def Modification(self, utilisateur: Utulisateur):
+    def Modification(self, utilisateur: Utilisateur):
         try:
             cursor = self.connexion.cursor()
             cursor.execute("""
@@ -61,3 +45,35 @@ class UtilisateurDAO(BaseDAO):
         except Exception as e:
             self.connexion.rollback()
             print("Erreur update utilisateur:", e)
+
+    ##########" gerer l'authentification
+
+    def authenticate(self, login, password):
+              db = DatabaseConnection()
+              if not db.connexion():
+                  return None
+              sql = """
+            SELECT * FROM utilisateur
+            WHERE login=%s AND password=%s
+            """
+              params = (login, password)
+              db.execute(sql, params)
+              ligne = db.fetchone()
+              db.disconnect()
+              if ligne:
+                  return Utilisateur(
+                      id=ligne[0],
+                      login=ligne[1],
+                      password=ligne[2],
+                      nom=ligne[3],
+                      prenom=ligne[4],
+                      email=ligne[5],
+                      role=ligne[6],
+                      service=ligne[7],
+                      date_creation=ligne[8]
+                  )
+              return None
+
+
+
+

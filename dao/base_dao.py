@@ -1,29 +1,30 @@
 class BaseDAO:
     def __init__(self, connexion):
         self.connexion = connexion
-
-    def get_all(self, table_name):
+      ### INSTANCIATION A LA BD A FAIRE DANS LE MAIN POU USE LES FONSCTION DU DAO
+    ### NOM_TABLE A COMPLETER PAR LA TABLE SUR LA QUELLE ON EXECUTE LES FONCTIONS
+    def get_all(self, nom_table):
         try:
             cursor = self.connexion.cursor()
-            cursor.execute(f"SELECT * FROM {table_name}")
+            cursor.execute(f"SELECT * FROM {nom_table}")
             return cursor.fetchall()
         except Exception as e:
             print("Erreur get_all:", e)
             return []
 
-    def get_by_id(self, table_name, id):
+    def get_by_id(self, nom_table, id):
         try:
             cursor = self.connexion.cursor()
-            cursor.execute(f"SELECT * FROM {table_name} WHERE id=%s", (id,))
+            cursor.execute(f"SELECT * FROM {nom_table} WHERE id=%s", (id,))
             return cursor.fetchone()
         except Exception as e:
             print("Erreur get_by_id:", e)
             return None
 
-    def delete_by_id(self, table_name, id):
+    def delete_by_id(self, nom_table, id):
         try:
             cursor = self.connexion.cursor()
-            cursor.execute(f"DELETE FROM {table_name} WHERE id=%s", (id,))
+            cursor.execute(f"DELETE FROM {nom_table} WHERE id=%s", (id,))
             self.connexion.commit()
         except Exception as e:
             self.connexion.rollback()
