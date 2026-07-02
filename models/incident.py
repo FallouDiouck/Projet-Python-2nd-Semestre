@@ -3,6 +3,7 @@ from datetime import datetime
 
 class Incident:
 
+
     def __init__(self, id=None, titre="", description="", priorite="",
                  statut="OUVERT", date_creation=None, utilisateur_id=None):
 
