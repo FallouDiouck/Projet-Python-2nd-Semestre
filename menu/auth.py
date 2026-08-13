@@ -1,11 +1,13 @@
 from dao.utulisateur_dao import UtilisateurDAO
+from database.connexion import DatabaseConnection
+
 
 def authentification():
     print("=== Connexion ===")
     login = input("Login: ")
     password = input("Mot de passe: ")
-
-    dao = UtilisateurDAO()
+    connexion = DatabaseConnection().connexion
+    dao = UtilisateurDAO(connexion)
     user = dao.authentifier(login, password)
 
     if user:
