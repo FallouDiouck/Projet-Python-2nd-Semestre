@@ -48,7 +48,7 @@ class UtilisateurDAO(BaseDAO):
 
     ##########" gerer l'authentification
 
-    def authenticate(self, login, password):
+    def authentifier(self, login, password):
               db = DatabaseConnection()
               if not db.connexion():
                   return None

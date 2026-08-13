@@ -1,7 +1,7 @@
 class BaseDAO:
     def __init__(self, connexion):
         self.connexion = connexion
-      ### INSTANCIATION A LA BD A FAIRE DANS LE MAIN POU USE LES FONSCTION DU DAO
+      ### INSTANCIATION A LA BD A FAIRE DANS LE MAIN POUR USE LES FONSCTION DU DAO
     ### NOM_TABLE A COMPLETER PAR LA TABLE SUR LA QUELLE ON EXECUTE LES FONCTIONS
     def get_all(self, nom_table):
         try:
