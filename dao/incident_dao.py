@@ -1,6 +1,6 @@
 from dao.base_dao import BaseDAO
 from models.incident import Incident
-
+from database_connection import DatabaseConnection
 class IncidentDAO(BaseDAO):
     def __init__(self, connexion):
         super().__init__(connexion)

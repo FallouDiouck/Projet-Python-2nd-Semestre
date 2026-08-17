@@ -1,5 +1,5 @@
 ### Authentification ( user / technicien / admin)
-
+from database_connection import DatabaseConnection
 from dao.base_dao import BaseDAO
 from models.intervention import Intervention
 
