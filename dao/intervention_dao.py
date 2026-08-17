@@ -9,8 +9,9 @@ class InterventionDAO(BaseDAO):
 
     def ajout_interv(self, intervention: Intervention):
         try:
-            cursor = self.connexion.cursor()
-            cursor.execute("""
+            db = DatabaseConnection()
+            if db.connexion():
+              db.execute("""
                 INSERT INTO intervention (commentaire, duree_minutes, date_intervention, incident_id, technicien_id)
                 VALUES (%s, %s, NOW(), %s, %s)
             """, (intervention.commentaire, intervention.duree_minutes,
@@ -22,18 +23,20 @@ class InterventionDAO(BaseDAO):
 
     def Recup_id_incident(self, incident_id):
         try:
-            cursor = self.connexion.cursor()
-            cursor.execute("SELECT * FROM intervention WHERE incident_id=%s", (incident_id,))
-            return cursor.fetchall()
+            db = DatabaseConnection()
+            if db.connexion():
+             db.execute("SELECT * FROM intervention WHERE incident_id=%s", (incident_id,))
+            return db.fetchall()
         except Exception as e:
             print("Erreur de recuperation de l'incident:", e)
             return []
 
     def Recup_par_technicien(self, technicien_id):
         try:
-            cursor = self.connexion.cursor()
-            cursor.execute("SELECT * FROM intervention WHERE technicien_id=%s", (technicien_id,))
-            return cursor.fetchall()
+            db = DatabaseConnection()
+            if db.connexion():
+             db.execute("SELECT * FROM intervention WHERE technicien_id=%s", (technicien_id,))
+            return db.fetchall()
         except Exception as e:
             print("Erreur get_by_technicien:", e)
             return []

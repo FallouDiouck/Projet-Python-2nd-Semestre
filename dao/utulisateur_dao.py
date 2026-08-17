@@ -23,10 +23,12 @@ class UtilisateurDAO(BaseDAO):
                     utilisateur.service
                 )
                 try:
-                   cursor = self.connexion.cursor()
-                   cursor.execute(sql, params)
-                   self.connexion.commit()
-                   return True
+                    db = DatabaseConnection()
+                    if db.connexion():
+                     db = self.connexion()
+                     db.execute(sql, params)
+                    self.connexion.commit()
+                    return True
                 except Exception as e:
                   self.connexion.rollback()
                   print("Erreur lors de l'ajout:", e)
@@ -35,13 +37,14 @@ class UtilisateurDAO(BaseDAO):
 
     def Modification(self, utilisateur: Utilisateur):
         try:
-            cursor = self.connexion.cursor()
-            cursor.execute("""
+            db = DatabaseConnection()
+            if db.connexion():
+             db.execute("""
                 UPDATE utilisateur SET password=%s, nom=%s, prenom=%s, email=%s, role=%s, service=%s
                 WHERE id=%s
-            """, (utilisateur.password, utilisateur.nom, utilisateur.prenom,
+               """, (utilisateur.password, utilisateur.nom, utilisateur.prenom,
                   utilisateur.email, utilisateur.role, utilisateur.service, utilisateur.id))
-            self.connexion.commit()
+             self.connexion.commit()
         except Exception as e:
             self.connexion.rollback()
             print("Erreur update utilisateur:", e)
