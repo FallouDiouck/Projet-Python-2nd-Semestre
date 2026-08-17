@@ -99,7 +99,7 @@ class IncidentDAO(BaseDAO):
             db = DatabaseConnection()
             if db.connexion():
              db.execute("SELECT statut, COUNT(*) FROM incident GROUP BY statut")
-             stats["par_statut"] = cursor.fetchall()
+             stats["par_statut"] = db.fetchall()
 
              # 2. Nombre d’incidents par priorité
              db.execute("SELECT priorite, COUNT(*) FROM incident GROUP BY priorite")
