@@ -12,5 +12,5 @@ def main():
         menu_technicien(user)
     elif user.role == "ADMIN":
         menu_admin()
-#####################
+
 main()
