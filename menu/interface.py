@@ -124,7 +124,6 @@ def menu_admin():
 
         choix = input("Votre choix: ")
         if choix == "1":
-            # Exemple simple : liste des utilisateurs
             users = dao_user.get_all("utulisateur")
             for u in users:
                 print(u)

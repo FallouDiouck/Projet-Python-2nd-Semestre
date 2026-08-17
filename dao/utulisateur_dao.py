@@ -54,7 +54,7 @@ class UtilisateurDAO(BaseDAO):
                   return None
               sql = """
             SELECT * FROM utilisateur
-            WHERE login=%s AND password=%s
+            WHERE login= %s AND password=%s
             """
               params = (login, password)
               db.execute(sql, params)
