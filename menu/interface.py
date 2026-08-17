@@ -4,11 +4,11 @@ from dao.intervention_dao import InterventionDAO
 from models.incident import Incident
 from database.connexion import DatabaseConnection
 from models.intervention import Intervention
-
+from models.utilisateur import Utilisateur
 
 def menu_utilisateur(user):
 
-    # Récupérer la connexion unique
+
     connexion = DatabaseConnection().connexion
     # Instancier le DAO avec la connexion
     dao_incident = IncidentDAO(connexion)
@@ -124,9 +124,57 @@ def menu_admin():
 
         choix = input("Votre choix: ")
         if choix == "1":
-            users = dao_user.get_all("utulisateur")
-            for u in users:
-                print(u)
+            while True:
+                print("\n=== Menu Admin ===")
+                print("1. Gestion des utilisateurs (CRUD)")
+                print("2. Consulter tous les incidents")
+                print("3. Statistiques")
+                print("0. Déconnexion")
+
+                choix = input("Votre choix: ")
+                if choix == "1":
+                    while True:
+                        print("1 Ajouter un utilisateur")
+                        print("2 Modifier un utilisateur")
+                        print("3 Supprimer un utilisateur")
+                        print("4 Retour")
+                        ch = input("Faite votre choix")
+                        if ch == "1":
+                            nom = input("Nom : ")
+                            prenom = ("Prenom : ")
+                            login = input("Login : ")
+                            password = input("Passeword : ")
+                            email = input("Email : ")
+                            service = input("Service : ")
+
+                            user = Utilisateur(
+                                login=login,
+                                password=password,
+                                nom=nom,
+                                prenom=prenom,
+                                email=email,
+                                role="Utilisateur",
+                                service=service
+                            )
+                            dao_user.ajouterUser(user)
+                        elif ch == "2":
+                            id = input("Saisir ID : ")
+                            user = dao_user.get_by_id("utilisateur", id)
+                            user.nom = input("Nouveau nom : ") or user.nom
+                            user.prenom = input("Nouveau prenom : ") or user.prenom
+                            user.password = input(" : ") or user.password
+                            user.login = input("Login : ") or user.login
+                            user.role = input("Role : ") or user.role
+                            user.service = input("Service : ") or user.service
+
+                            dao_user.Modification(user)
+                        elif ch == "3":
+                            id = input("Saisir ID : ")
+                            user = dao_user.get_by_id("utilisateur", id)
+                            if user:
+                                dao_user.delete_by_id("utilisateur", id)
+                        elif ch == "4":
+                            break
         elif choix == "2":
             incidents = dao_incident.get_all("incident")
             for inc in incidents:
