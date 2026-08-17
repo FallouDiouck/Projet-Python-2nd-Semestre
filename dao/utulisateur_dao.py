@@ -22,31 +22,31 @@ class UtilisateurDAO(BaseDAO):
                     utilisateur.role,
                     utilisateur.service
                 )
+
+                db = DatabaseConnection()
                 try:
-                    db = DatabaseConnection()
                     if db.connexion():
-                     db = self.connexion()
                      db.execute(sql, params)
-                    self.connexion.commit()
+                     db.commit()
                     return True
                 except Exception as e:
-                  self.connexion.rollback()
+                  db.rollback()
                   print("Erreur lors de l'ajout:", e)
                 return False
 
 
     def Modification(self, utilisateur: Utilisateur):
+        db = DatabaseConnection()
         try:
-            db = DatabaseConnection()
             if db.connexion():
              db.execute("""
                 UPDATE utilisateur SET password=%s, nom=%s, prenom=%s, email=%s, role=%s, service=%s
                 WHERE id=%s
                """, (utilisateur.password, utilisateur.nom, utilisateur.prenom,
                   utilisateur.email, utilisateur.role, utilisateur.service, utilisateur.id))
-             self.connexion.commit()
+             db.commit()
         except Exception as e:
-            self.connexion.rollback()
+            db.rollback()
             print("Erreur update utilisateur:", e)
 
     ##########" gerer l'authentification

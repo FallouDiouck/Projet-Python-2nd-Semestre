@@ -7,33 +7,35 @@ class IncidentDAO(BaseDAO):
 
     def ajout_Incident(self, incident: Incident):
         ## reference a la classe et l'objet
+        db = DatabaseConnection()
         try:
-            db = DatabaseConnection()
             if db.connexion():
               db.execute("""
                 INSERT INTO incident (titre, description, priorite, statut, date_creation, utilisateur_id)
                 VALUES (%s, %s, %s, %s, NOW(), %s)
             """, (incident.titre, incident.description, incident.priorite,
                   incident.statut, incident.utilisateur_id))
+              db.commit()
         except Exception as e:
-            self.connexion.rollback()
+            db.rollback()
             print("Erreur de creation incident:", e)
 
     def Modifier_Statut(self, incident_id, nouveau_statut):
+
+        db = DatabaseConnection()
         try:
-            db = DatabaseConnection()
             if db.connexion():
              db.execute("""
                 UPDATE incident SET statut=%s WHERE id=%s
             """, (nouveau_statut, incident_id))
-            self.connexion.cursor()
+            db.commit()
         except Exception as e:
-            self.connexion.rollback()
+            db.rollback()
             print("Erreur modif statut:", e)
 
     def recup_user(self, utilisateur_id):
+        db = DatabaseConnection()
         try:
-            db = DatabaseConnection()
             if db.connexion():
              db.execute("SELECT * FROM incident WHERE utilisateur_id=%s", (utilisateur_id,))
             return db.fetchall()
@@ -42,8 +44,8 @@ class IncidentDAO(BaseDAO):
             return []
 
     def filtrer_par_statut(self, utilisateur_id, statut):
+        db = DatabaseConnection()
         try:
-            db = DatabaseConnection()
             if db.connexion():
              db.execute("SELECT * FROM incident WHERE utilisateur_id=%s AND statut=%s",
                            (utilisateur_id, statut))
@@ -53,8 +55,8 @@ class IncidentDAO(BaseDAO):
             return []
 
     def filtrer_par_priorite(self, utilisateur_id, priorite):
+        db = DatabaseConnection()
         try:
-            db = DatabaseConnection()
             if db.connexion() :
              db.execute("SELECT * FROM incident WHERE utilisateur_id=%s AND priorite=%s",
                            (utilisateur_id, priorite))
@@ -64,8 +66,8 @@ class IncidentDAO(BaseDAO):
             return []
 
     def get_ouvert_enCours(self):
+        db = DatabaseConnection()
         try:
-            db = DatabaseConnection()
             if db.connexion():
                db.execute("""
                 SELECT * FROM incident 
@@ -77,8 +79,8 @@ class IncidentDAO(BaseDAO):
             return []
 
     def recup_technicien(self, technicien_id):
+        db = DatabaseConnection()
         try:
-            db = DatabaseConnection()
             if db.connexion():
              db = self.connexion.cursor()
              db.execute("""
@@ -95,8 +97,8 @@ class IncidentDAO(BaseDAO):
 
     def statistiques(self):
         stats = {}
+        db = DatabaseConnection()
         try:
-            db = DatabaseConnection()
             if db.connexion():
              db.execute("SELECT statut, COUNT(*) FROM incident GROUP BY statut")
              stats["par_statut"] = db.fetchall()

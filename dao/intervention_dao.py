@@ -8,22 +8,22 @@ class InterventionDAO(BaseDAO):
         super().__init__(connexion)
 
     def ajout_interv(self, intervention: Intervention):
+        db = DatabaseConnection()
         try:
-            db = DatabaseConnection()
             if db.connexion():
               db.execute("""
                 INSERT INTO intervention (commentaire, duree_minutes, date_intervention, incident_id, technicien_id)
                 VALUES (%s, %s, NOW(), %s, %s)
             """, (intervention.commentaire, intervention.duree_minutes,
                   intervention.incident_id, intervention.technicien_id))
-            self.connexion.commit()
+            db.commit()
         except Exception as e:
-            self.connexion.rollback()
+            db.rollback()
             print("Erreur create intervention:", e)
 
     def Recup_id_incident(self, incident_id):
+        db = DatabaseConnection()
         try:
-            db = DatabaseConnection()
             if db.connexion():
              db.execute("SELECT * FROM intervention WHERE incident_id=%s", (incident_id,))
             return db.fetchall()
@@ -32,8 +32,8 @@ class InterventionDAO(BaseDAO):
             return []
 
     def Recup_par_technicien(self, technicien_id):
+        db = DatabaseConnection()
         try:
-            db = DatabaseConnection()
             if db.connexion():
              db.execute("SELECT * FROM intervention WHERE technicien_id=%s", (technicien_id,))
             return db.fetchall()

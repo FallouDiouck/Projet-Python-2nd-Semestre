@@ -26,10 +26,10 @@ class BaseDAO:
             return None
 
     def delete_by_id(self, nom_table, id):
+        db = DatabaseConnection()
         try:
-            db = DatabaseConnection()
             db.execute(f"DELETE FROM {nom_table} WHERE id=%s", (id,))
-            self.connexion.commit()
+            db.commit()
         except Exception as e:
-            self.connexion.rollback()
+            db.rollback()
             print("Erreur delete_by_id:", e)
